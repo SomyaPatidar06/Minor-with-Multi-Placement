@@ -1,0 +1,248 @@
+{% load static %}
+<!doctype html>
+<!-- Website template by freewebsitetemplates.com -->
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Space Science Website Template</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+  <script src="{% static 'js/mobile.js'%}" type="text/javascript"></script>
+  <style>
+    /* Hero */
+    .hero {
+      position: relative;
+      height: 78vh;
+      min-height: 520px;
+      border-radius: 18px;
+      overflow: hidden;
+      margin-top: 10px
+    }
+
+    .hero video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(2, 6, 12, 0.45), rgba(2, 6, 12, 0.7));
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: flex-start;
+      padding: 48px;
+      max-width: 720px
+    }
+
+    .eyebrow {
+      background: var(--glass);
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: black;
+      font-weight: 700
+    }
+
+    .hero h2 {
+      font-size: 40px;
+      margin: 0;
+      line-height: 1.03
+    }
+
+    .hero p {
+      color: #fff;
+      max-width: 560px
+    }
+
+    .hero .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    /* Slider */
+    .slider {
+      margin-top: 32px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #061022
+    }
+
+    .slides {
+      display: flex;
+      transition: transform .1s ease;
+      gap: 0
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-size: cover;
+      background-position: center
+    }
+
+    .slider .controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #213241;
+      cursor: pointer
+    }
+
+    .dot.active {
+      background: var(--accent)
+    }
+
+    /* Sections */
+    section {
+      padding: 56px 0
+    }
+
+    h3.section-title {
+      font-size: 22px;
+      margin: 0 0 18px;
+      color: var(--accent, #f3c13a)
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--gap)
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+      padding: 20px;
+      border-radius: 14px
+    }
+
+    .muted {
+      color: var(--muted)
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.06), transparent);
+      opacity: 0;
+      transition: opacity .4s ease;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    #team {
+      text-align: center;
+      padding: 40px 0;
+      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.06), transparent);
+      border-radius: 16 px;
+    }
+
+    .section-title {
+      font-size: 28px;
+      color: #333;
+      margin-bottom: 30px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+
+<body>
+  {% include 'header.html'%}
+  <main class="container" style="padding-top:120px">
+    <!-- Hero / Video background -->
+    <section id="home" class="hero" aria-label="hero">
+      <!-- Replace 'assets/hero.mp4' with your video path. Use a short looped clip for performance. -->
+      <video autoplay muted loop playsinline poster="assets/hero-poster.jpg">
+        <source src="{% static 'images/video2.mp4'%}" type="video/mp4">
+      </video>
+      <div class="hero-content">
+        <div class="eyebrow">SADAN — Residential & Commercial</div>
+        <h2>Designing timeless spaces that tell a story</h2>
+        <p class="muted">We craft interiors and architecture that balance beauty, function and sustainability. From
+          concept to delivery — tailored solutions for every scale.</p>
+        <div class="actions">
+          <a class="cta" href="/projects/">Our Projects</a>
+          <a href="/service/"
+            style="padding:8px 12px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);">View
+            Services</a>
+          <a href="/ar-studio/"
+            style="padding:8px 12px;border-radius:8px;background:#f3c13a;color:#000;font-weight:600;">Try AR Visuals</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slider -->
+    <div class="slider" aria-label="featured projects">
+      <div class="slides" id="slides">
+        <div class="slide" style="background-image:url(&quot;{% static 'images/sl1.jpeg' %}&quot;)"></div>
+        <div class="slide" style="background-image:url(&quot;{% static 'images/sl4.jpg' %}&quot;)"></div>
+        <div class="slide" style="background-image:url(&quot;{% static 'images/sl3.jpg' %}&quot;)"></div>
+        <div class="slide" style="background-image:url(&quot;{% static 'images/sl5.webp' %}&quot;)"></div>
+        <div class="slide" style="background-image:url(&quot;{% static 'images/front.jpg' %}&quot;)"></div>
+      </div>
+      <div class="controls" id="dots"></div>
+    </div>
+    {% include 'footer.html'%}
+  </main>
+  <script>
+    // Simple slider
+    (function () {
+      const slides = document.getElementById('slides');
+      const slidesCount = slides.children.length;
+      const dotsWrap = document.getElementById('dots');
+      let index = 0;
+      for (let i = 0; i < slidesCount; i++) {
+        const d = document.createElement('div'); d.className = 'dot' + (i === 0 ? ' active' : ''); d.dataset.i = i;
+        d.addEventListener('click', () => { goTo(+d.dataset.i) });
+        dotsWrap.appendChild(d);
+      }
+      function goTo(i) { index = i; slides.style.transform = `translateX(${-100 * i}%)`; updateDots(); }
+      function updateDots() { Array.from(dotsWrap.children).forEach((d, ii) => d.classList.toggle('active', ii === index)); }
+      function next() { goTo((index + 1) % slidesCount); }
+      let t = setInterval(next, 5000);
+      // pause on hover
+      const slider = document.querySelector('.slider');
+      slider.addEventListener('mouseenter', () => clearInterval(t));
+      slider.addEventListener('mouseleave', () => t = setInterval(next, 5000));
+    })();
+  </script>
+</body>
+
+</html>

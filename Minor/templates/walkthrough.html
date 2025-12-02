@@ -1,0 +1,246 @@
+{% load static %}
+<!doctype html>
+<!-- Website template by freewebsitetemplates.com -->
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Space Science Website Template</title>
+	<link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+	<script src="{% static 'js/mobile.js'%}" type="text/javascript"></script>
+  <style>
+  body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #0b0b0b;
+  color: #fff;
+}
+
+.page-header {
+  text-align: center;
+  padding: 60px 20px 30px;
+  background: linear-gradient(to bottom, #1a1a1a, #0b0b0b);
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  color: #d4af37;
+}
+
+.page-header p {
+  font-size: 1rem;
+  color: #ccc;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.container {
+  width: 90%;
+  max-width: 1300px;
+  margin: 50px auto;
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+.video-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  box-shadow: 0 4px 25px rgba(0,0,0,0.6);
+  cursor: pointer;
+  transition: transform 0.4s ease;
+}
+
+.video-card:hover {
+  transform: scale(1.03);
+}
+
+.video-card video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+  filter: brightness(0.8);
+}
+
+.video-card:hover video {
+  transform: scale(1.08);
+  filter: brightness(0.6);
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(transparent, rgba(0,0,0,0.85));
+  padding: 20px;
+  color: #fff;
+  transition: 0.4s;
+  opacity: 0;
+}
+
+.video-card:hover .overlay {
+  opacity: 1;
+}
+
+.overlay h3 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  color: #d4af37;
+}
+
+.overlay p {
+  font-size: 0.9rem;
+  color: #ddd;
+}
+.play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.3);
+  border: none;
+  color: #fff;
+  font-size: 2.5rem;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.play-btn:hover {
+  background:rgba(0,0,0,0.3);
+  transform: translate(-50%, -50%) scale(1.1);
+}
+</style>
+
+</head>
+<body>
+	  {%  include 'header.html'%}
+  <main class="container" style="padding-top:120px">
+
+
+
+<!-- Page Header -->
+<section class="page-header">
+  <h1>Walkthrough & Animation</h1>
+  <p>Experience our interior spaces come to life through realistic 3D walkthroughs and architectural animations.</p>
+</section>
+
+<!-- Video Grid Section -->
+<section class="video-gallery">
+  <div class="container">
+    <div class="video-grid">
+
+      <!-- Video 1 -->
+      <div class="video-card">
+        <video src="{% static 'images/w1.mp4' %}" preload="metadata"></video>
+        <div class="overlay">
+          <h3>Modern Living Room</h3>
+          <p>Elegant space with warm lighting and contemporary furniture.</p>
+        </div>
+         <button class="play-btn">&#9658;</button>
+      </div>
+
+      <!-- Video 2 -->
+      <div class="video-card">
+        <video src="{% static 'images/w2.mp4' %}" preload="metadata"></video>
+        <div class="overlay">
+          <h3>Luxury Kitchen Design</h3>
+          <p>Combining textures and tones for a stylish modern cooking space.</p>
+        </div>
+         <button class="play-btn">&#9658;</button>
+      </div>
+
+      <!-- Video 3 -->
+      <div class="video-card">
+        <video src="{% static 'images/w5.mp4' %}" preload="metadata"></video>
+        <div class="overlay">
+          <h3>Master Bedroom</h3>
+          <p>Soft ambiance, calm palette, and minimal design for restful nights.</p>
+        </div>
+         <button class="play-btn">&#9658;</button>
+      </div>
+
+      <!-- Video 4 -->
+      <div class="video-card">
+        <video src="{% static 'images/w6.mp4' %}" preload="metadata"></video>
+        <div class="overlay">
+          <h3>Office Walkthrough</h3>
+          <p>Stylish workspace with natural tones and open layout.</p>
+        </div>
+         <button class="play-btn">&#9658;</button>
+      </div>
+
+      <!-- Video 5 -->
+      <div class="video-card">
+        <video src="{% static 'images/w3.mp4' %}" preload="metadata"></video>
+        <div class="overlay">
+          <h3>Luxury Lounge</h3>
+          <p>Ambient lighting and premium seating arrangement for relaxation.</p>
+        </div>
+         <button class="play-btn">&#9658;</button>
+      </div>
+
+      <!-- Video 6 -->
+      <div class="video-card">
+        <video src="{% static 'images/w4.mp4' %}" preload="metadata"></video>
+        <div class="overlay">
+          <h3>Exterior Visualization</h3>
+          <p>Architectural walkthrough showing elevation and outdoor design.</p>
+        </div>
+         <button class="play-btn">&#9658;</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+    {% include 'footer.html'%}
+   </main>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+  const videoCards = document.querySelectorAll(".video-card");
+
+  videoCards.forEach(card => {
+    const video = card.querySelector("video");
+    const btn = card.querySelector(".play-btn");
+
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+
+      if (video.paused) {
+        // Pause all other videos before playing this one
+        document.querySelectorAll("video").forEach(v => v.pause());
+
+        video.play();
+        btn.innerHTML = "❚❚"; // pause icon
+        btn.style.background = "rgba(0,0,0,0.6)";
+      } else {
+        video.pause();
+        btn.innerHTML = "&#9658;"; // play icon
+        btn.style.background = "rgba(212,175,55,0.85)";
+      }
+    });
+
+    // Reset button when video ends
+    video.addEventListener("ended", () => {
+      btn.innerHTML = "&#9658;";
+      btn.style.background = "rgba(212,175,55,0.85)";
+    });
+  });
+});
+
+</script>
+</body>
+</html>

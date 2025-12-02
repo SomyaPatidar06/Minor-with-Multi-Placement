@@ -1,0 +1,106 @@
+{% load static %}
+<!doctype html>
+<!-- Website template by freewebsitetemplates.com -->
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>projects - Space Science Website Template</title>
+	<link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/mobile.css'%}">
+	<script src="{%static 'js/mobile.js'%}" type="text/javascript"></script>
+</head>
+<body>
+{% include 'header.html'%}
+ <main class="container" style="padding-top:120px">
+	    <!-- Projects -->
+<!-- Project Slider -->
+<section id="projects-slider" style="margin-top:60px;">
+  <h3 class="section-title">Featured Projects</h3>
+    <h3 class="section-title">Exterior design Projects</h3>
+  <div class="slider-wrapper">
+    <div class="project-slide">
+      <img src="{% static 'images/pj1.jpg' %}" alt="Luxury Living Room" />
+      <div class="overlay">
+        <h4>Modern Luxury Apartment</h4>
+        <p>Contemporary interiors blending comfort with elegance.</p>
+      </div>
+    </div>
+    <div class="project-slide">
+      <img src="{% static 'images/ex3.jpg' %}" alt="Office Space" />
+      <div class="overlay">
+        <h4>modern Elevation Design</h4>
+        <p>Functional and inspiring work environments designed for productivity.</p>
+      </div>
+    </div>
+    <div class="project-slide">
+      <img src="{% static 'images/pj3.jpg' %}" alt="Villa" />
+      <div class="overlay">
+        <h4>Private Villa</h4>
+        <p>Elegant architecture that blends indoor and outdoor experiences.</p>
+      </div>
+    </div>
+  </div>
+</section>
+    <!-- Projects -->
+<!-- Project Slider -->
+<section id="projects-slider" style="margin-top:60px;">
+  <h3 class="section-title">Interior Design Projects</h3>
+  <div class="slider-wrapper">
+    <div class="project-slide">
+      <img src="{% static 'images/int1.jpg' %}" alt="Luxury Living Room" />
+      <div class="overlay">
+        <h4>Modern Bedroom Design</h4>
+        <p>Contemporary interiors blending comfort with elegance.</p>
+      </div>
+    </div>
+    <div class="project-slide">
+      <img src="{% static 'images/int2.jpeg' %}" alt="Office Space" />
+      <div class="overlay">
+        <h4>Modern Drawing Room Design</h4>
+        <p>Functional and inspiring work environments designed for productivity.</p>
+      </div>
+    </div>
+    <div class="project-slide">
+      <img src="{% static 'images/pj2.jpg' %}" alt="Villa" />
+      <div class="overlay">
+        <h4>Kitchen</h4>
+        <p>Elegant architecture that blends indoor and outdoor experiences.</p>
+      </div>
+    </div>
+  </div>
+</section>
+    <!-- Projects -->
+<!-- Project Slider -->
+<section id="projects-slider" style="margin-top:60px;">
+  <h3 class="section-title">Other Projects</h3>
+  <div class="slider-wrapper">
+    <div class="project-slide">
+      <img src="{% static 'images/other1.jpg' %}" alt="Luxury Living Room" />
+      <div class="overlay">
+        <h4>Terrace Design</h4>
+        <p>Contemporary interiors blending comfort with elegance.</p>
+      </div>
+    </div>
+    <div class="project-slide">
+      <img src="{% static 'images/other2.jpg' %}" alt="Office Space" />
+      <div class="overlay">
+        <h4>Colony 3D layout</h4>
+        <p>Functional and inspiring work environments designed for productivity.</p>
+      </div>
+    </div>
+    <div class="project-slide">
+      <img src="{% static 'images/other3.jpeg' %}" alt="Villa" />
+      <div class="overlay">
+        <h4>Creative Office Space</h4>
+        <p>Elegant architecture that blends indoor and outdoor experiences.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% include 'footer.html'%}
+ </main>
+
+</body>
+</html>

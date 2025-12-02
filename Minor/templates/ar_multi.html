@@ -1,0 +1,245 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Multi-Object AR (WebXR)</title>
+  <style>
+    html,body{margin:0;height:100%;background:#0f0f12;color:#eaeaea;font-family:system-ui,Arial}
+    #tip{position:fixed;left:12px;top:10px;font-size:14px;color:#c9c9d3}
+    #ui{position:fixed;left:0;right:0;bottom:0;padding:12px;display:flex;gap:12px;justify-content:center;align-items:center;background:linear-gradient(180deg,transparent,rgba(0,0,0,.6))}
+    button,select{background:#17181d;border:1px solid #2a2b31;color:#eaeaea;border-radius:12px;padding:12px 14px}
+    button:disabled{opacity:.5}
+    canvas{display:block;width:100%;height:100%}
+  </style>
+</head>
+<body>
+  <div id="tip">Tip: Tap to place. Two-finger rotate/scale is handled by UI buttons in this demo.</div>
+  <div id="ui">
+    <button id="start">Start AR</button>
+    <select id="picker">
+      <option value="/static/models/Sofaa.glb">Sofa</option>
+      <option value="/static/models/Chair.glb">Chair</option>
+      <option value="/static/models/Tablee.glb">Table</option>
+      <option value="/static/models/Floor_Lamp.glb">Floor Lamp</option>
+    </select>
+    <button id="autoArrange" disabled>Auto Arrange around Sofa</button>
+    <button id="clearAll" disabled>Clear All</button>
+  </div>
+
+  <!-- Three.js + helpers (ESM) -->
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.161.0/build/three.module.js';
+    import { ARButton } from 'https://unpkg.com/three@0.161.0/examples/jsm/webxr/ARButton.js';
+    import { GLTFLoader } from 'https://unpkg.com/three@0.161.0/examples/jsm/loaders/GLTFLoader.js';
+
+    // ------- DOM -------
+    const btnStart = document.getElementById('start');
+    const btnClear = document.getElementById('clearAll');
+    const btnAuto  = document.getElementById('autoArrange');
+    const picker   = document.getElementById('picker');
+
+    // ------- Renderer & Scene -------
+    const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.xr.enabled = true;
+    document.body.appendChild( renderer.domElement );
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera();
+    const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
+    scene.add(light);
+
+    // A reticle to show where the hit-test is
+    const reticle = new THREE.Mesh(
+      new THREE.RingGeometry(0.12, 0.15, 32).rotateX(-Math.PI/2),
+      new THREE.MeshBasicMaterial({ color: 0x77ff77 })
+    );
+    reticle.matrixAutoUpdate = false;
+    reticle.visible = false;
+    scene.add(reticle);
+
+    // State
+    const loader = new GLTFLoader();
+    const placed = [];            // { type: 'sofa'|'chair'|'table'|'lamp', root: THREE.Object3D }
+    let hitTestSource = null;
+    let localSpace    = null;
+    let xrRefSpace    = null;
+    let started       = false;
+
+    // ---- helpers ----
+    function typeFromUrl(url){
+      const base = url.toLowerCase();
+      if (base.includes('sofa')) return 'sofa';
+      if (base.includes('chair')) return 'chair';
+      if (base.includes('lamp')) return 'lamp';
+      if (base.includes('table')) return 'table';
+      return 'object';
+    }
+
+    function loadGLB(url){
+      // add cache buster to avoid stale files through ngrok
+      if (url.includes('/static/')) {
+        const v = Date.now();
+        url = url + (url.includes('?') ? '&' : '?') + 'v=' + v;
+      }
+      return new Promise((resolve, reject)=>{
+        loader.load(url, (gltf)=> resolve(gltf.scene), undefined, reject);
+      });
+    }
+
+    function addPlaced(obj, type){
+      // give all objects a simple shadow proxy to ground them
+      const shadow = new THREE.Mesh(
+        new THREE.CircleGeometry(0.25, 24).rotateX(-Math.PI/2),
+        new THREE.MeshBasicMaterial({ color:0x000000, transparent:true, opacity:0.25 })
+      );
+      shadow.position.y = 0.01;
+      obj.add(shadow);
+
+      scene.add(obj);
+      placed.push({ type, root: obj });
+
+      btnClear.disabled = placed.length === 0;
+      btnAuto.disabled  = !placed.some(p=>p.type==='sofa');
+    }
+
+    function clearAll(){
+      for (const p of placed) scene.remove(p.root);
+      placed.length = 0;
+      btnClear.disabled = true;
+      btnAuto.disabled  = true;
+    }
+
+    // Arrange: chair in front of sofa, lamp on left (or right if occupied)
+    function autoArrange(){
+      const sofa = placed.find(p=>p.type==='sofa')?.root;
+      if (!sofa) return;
+
+      // Compute forward direction of sofa (negative Z in local)
+      const forward = new THREE.Vector3(0,0,-1).applyQuaternion(sofa.quaternion).normalize();
+      const right   = new THREE.Vector3(1,0,0).applyQuaternion(sofa.quaternion).normalize();
+
+      const chairDist = 1.2; // meters in front
+      const lampDist  = 1.0; // side
+
+      // chair position
+      const chairPos = sofa.position.clone().add(forward.multiplyScalar(chairDist));
+      // lamp: try left, else right
+      const leftPos  = sofa.position.clone().add(right.clone().multiplyScalar(-lampDist));
+      const rightPos = sofa.position.clone().add(right.clone().multiplyScalar(+lampDist));
+
+      const alreadyChair = placed.find(p=>p.type==='chair');
+      const alreadyLamp  = placed.find(p=>p.type==='lamp');
+
+      const promises = [];
+
+      if (!alreadyChair){
+        promises.push(
+          loadGLB('/static/models/Chair.glb').then(obj=>{
+            obj.position.copy(chairPos);
+            obj.scale.setScalar(0.8);
+            addPlaced(obj, 'chair');
+          })
+        );
+      }
+      if (!alreadyLamp){
+        // pick side that is farther from any existing object to avoid overlap
+        const sidePos = (()=>{
+          const distL = placed.reduce((a,p)=> a + p.root.position.distanceTo(leftPos), 0);
+          const distR = placed.reduce((a,p)=> a + p.root.position.distanceTo(rightPos), 0);
+          return (distL > distR) ? leftPos : rightPos;
+        })();
+        promises.push(
+          loadGLB('/static/models/Floor_Lamp.glb').then(obj=>{
+            obj.position.copy(sidePos);
+            obj.scale.setScalar(1.0);
+            addPlaced(obj, 'lamp');
+          })
+        );
+      }
+
+      Promise.all(promises).catch(console.error);
+    }
+
+    // ---- AR session setup ----
+    async function onStartAR(){
+      if (!navigator.xr){
+        alert('WebXR AR not supported on this browser/device.');
+        return;
+      }
+      started = true;
+
+      document.body.appendChild(ARButton.createButton(renderer, { requiredFeatures:['hit-test'] }));
+      // begin session via ARButton
+      renderer.xr.addEventListener('sessionstart', async ()=>{
+        const session = renderer.xr.getSession();
+        xrRefSpace = await session.requestReferenceSpace('local');
+
+        const viewerSpace = await session.requestReferenceSpace('viewer');
+        const source = await session.requestHitTestSource({ space: viewerSpace });
+        hitTestSource = source;
+        localSpace = xrRefSpace;
+
+        // tap to place
+        renderer.domElement.addEventListener('click', placeCurrent);
+
+        btnAuto.disabled  = true;
+        btnClear.disabled = false;
+      });
+
+      renderer.setAnimationLoop(renderLoop);
+    }
+
+    async function placeCurrent(){
+      if (!reticle.visible) return;
+      const url  = picker.value;
+      const type = typeFromUrl(url);
+
+      try{
+        const obj = await loadGLB(url);
+        obj.position.setFromMatrixPosition(reticle.matrix);
+        // reasonable default scales
+        const s = (type==='sofa') ? 1.0 : (type==='chair' ? 0.9 : 1.0);
+        obj.scale.setScalar(s);
+        addPlaced(obj, type);
+      }catch(e){
+        console.error('GLB load error', e);
+        alert('Failed to load model: ' + url);
+      }
+    }
+
+    function renderLoop(timestamp, frame){
+      if (frame){
+        const refSpace = localSpace;
+        const viewerPose = frame.getViewerPose(refSpace);
+
+        if (hitTestSource && viewerPose){
+          const hitResults = frame.getHitTestResults(hitTestSource);
+          if (hitResults.length){
+            const hit = hitResults[0];
+            const pose = hit.getPose(refSpace);
+            reticle.visible = true;
+            reticle.matrix.fromArray(pose.transform.matrix);
+          } else {
+            reticle.visible = false;
+          }
+        }
+      }
+      renderer.render(scene, camera);
+    }
+
+    // ------- UI bindings -------
+    btnStart.addEventListener('click', onStartAR);
+    btnClear.addEventListener('click', clearAll);
+    btnAuto.addEventListener('click', autoArrange);
+
+    // Resize
+    window.addEventListener('resize', ()=>{
+      renderer.setSize( window.innerWidth, window.innerHeight );
+    });
+  </script>
+</body>
+</html>
