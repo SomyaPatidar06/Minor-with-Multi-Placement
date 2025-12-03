@@ -1,0 +1,182 @@
+{% load static %}
+<!doctype html>
+<!-- Website template by freewebsitetemplates.com -->
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>contact - Space Science Website Template</title>
+	<link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/mobile.css'%}">
+	<script src="{%static 'js/mobile.js'%}" type="text/javascript"></script>
+	<style>
+    /* Reset & base */
+    /* * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Georgia', serif;
+    } */
+
+    body {
+        background:  radial-gradient(circle at top left, rgba(255,255,255,0.06), transparent);
+        color: #333;
+    }
+
+    a {
+        text-decoration: none;
+        color: #333;
+    }
+
+    /* Container */
+    .contact-container {
+        display: flex;
+        min-height: 100vh;
+        margin: 50px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+         background:  radial-gradient(circle at top left, rgba(255,255,255,0.06), transparent);
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    /* Left Image Section */
+    .contact-image {
+        flex: 1;
+        background: url('https://thearchitectsdiary.com/wp-content/uploads/2024/07/drawing-room-interior-design-12.jpg') center/cover no-repeat;
+        position: relative;
+    }
+
+    .contact-image::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.3);
+    }
+
+    /* Right Form Section */
+    .contact-form {
+        flex: 1;
+        padding: 60px 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+		 background:  radial-gradient(circle at top left, rgba(255,255,255,0.06), transparent);
+    }
+
+    .contact-form h1 {
+        font-size: 36px;
+        margin-bottom: 20px;
+        color: #d3944c;
+    }
+
+    .contact-form p {
+        font-size: 16px;
+        margin-bottom: 40px;
+        line-height: 1.5;
+        color: #bbb;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #bbb;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 14px;
+        resize: none;
+    }
+
+    .form-group textarea {
+        height: 120px;
+    }
+
+    .submit-btn {
+        margin-top: 10px;
+        padding: 14px 25px;
+        border: none;
+        border-radius: 8px;
+        background-color: #d3944c; /* stylish warm color */
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .submit-btn:hover {
+        background-color: #8c6e4e;
+    }
+
+    /* Contact Info */
+    .contact-info {
+        margin-top: 30px;
+        font-size: 14px;
+        color: #ccc;
+    }
+
+    .contact-info div {
+        margin-bottom: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+        .contact-container {
+            flex-direction: column;
+            margin: 20px;
+        }
+        .contact-image {
+            height: 300px;
+        }
+    }
+
+</style>
+</head>
+<body>
+{% include 'header.html'%}
+  <main class="container" style="padding-top:120px">
+<div class="contact-container">
+    <div class="contact-image"></div>
+    <div class="contact-form">
+        <h1>Contact</h1>
+        <p>We’d love to hear from you! Whether it’s a project inquiry or a casual question, reach out and we’ll respond promptly.</p>
+
+        <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" placeholder="Your Name">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Your Email">
+        </div>
+
+        <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" placeholder="Write your message..."></textarea>
+        </div>
+
+        <button class="submit-btn">Send Message</button>
+
+        <div class="contact-info">
+            <div>Tuesday – Saturday | 9:00 am – 5:00 pm</div>
+            <div>Email: info@sadaninteriors.com</div>
+            <div>Phone: +91 12345 67890</div>
+        </div>
+    </div>
+</div>
+
+
+{% include 'footer.html'%}
+	</main>
+</body>
+</html>

@@ -1,0 +1,245 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AR Visuals — Try Furniture in AR</title>
+
+  <!-- model-viewer for AR furniture -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer@latest/dist/model-viewer.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #101114;
+      --card: #17181d;
+      --line: #2a2b31;
+      --text: #eaeaea;
+      --sub: #b9bcc7;
+      --chip: #121318;
+      --accent: #f3c13a;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      font-family: system-ui, Arial, sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text)
+    }
+
+    header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line)
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 20px
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 16px auto;
+      padding: 0 16px;
+      display: grid;
+      gap: 24px
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px
+    }
+
+    .card h2 {
+      margin: 0 0 8px 0;
+      font-size: 18px
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    select,
+    button,
+    input[type="color"],
+    input[type="range"] {
+      background: #0f1115;
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 8px
+    }
+
+    button:hover {
+      filter: brightness(1.08)
+    }
+
+    .hint {
+      font-size: 13px;
+      color: var(--sub)
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px
+    }
+
+    @media (min-width:900px) {
+      .grid2 {
+        grid-template-columns: 1fr 1fr
+      }
+    }
+
+    model-viewer {
+      width: 100%;
+      height: 420px;
+      background: #0c0d11;
+      border-radius: 8px;
+      border: 1px solid var(--line)
+    }
+
+    video,
+    canvas {
+      max-width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      display: block
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 8px 0
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--chip)
+    }
+
+    .status {
+      font-size: 13px;
+      color: var(--sub);
+      margin-top: 6px;
+      white-space: pre-line
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      font-weight: 600
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>AR Visuals</h1>
+    <div class="hint">Place furniture in AR.</div>
+  </header>
+
+  <main class="container">
+
+    <!-- A) Quick AR -->
+    <section class="card">
+      <h2>Quick AR (Recommended)</h2>
+      <div class="row">
+        <label class="pill">Choose model:
+          <select id="qa-model">
+            <option value="/static/models/Sofaa.glb">Sofa</option>
+            <option value="/static/models/Chair.glb">Chair</option>
+            <option value="/static/models/Tablee.glb">Table</option>
+            <option value="/static/models/Floor_Lamp.glb">Floor Lamp</option>
+            <option value="https://modelviewer.dev/shared-assets/models/Astronaut.glb">Astronaut (test)</option>
+          </select>
+        </label>
+      </div>
+
+      <model-viewer id="qa-viewer" src="" crossorigin="anonymous" ar ar-modes="webxr scene-viewer quick-look"
+        ar-placement="floor" ar-scale="auto" camera-controls environment-image="neutral" exposure="1">
+        <button slot="ar-button" class="btn-accent"
+          style="position:absolute;left:16px;bottom:16px;padding:10px 14px;border-radius:8px;">
+          View in AR
+        </button>
+      </model-viewer>
+
+
+      <div style="margin-top:10px;">
+        <a id="android-intent" href="#" class="btn-accent"
+          style="display:inline-block;padding:10px 14px;border-radius:8px;text-decoration: none;">
+          Open in AR (Android fallback)
+        </a>
+      </div>
+
+      <p class="hint" style="margin-top:8px;">Tip: In AR, point at the floor and move slowly to lock a plane; the object
+        appears on the detected floor.</p>
+    </section>
+
+
+  </main>
+
+  <!-- Quick AR glue -->
+  <script>
+    const qaSelect = document.getElementById('qa-model');
+    const qaViewer = document.getElementById('qa-viewer');
+    const androidIntent = document.getElementById('android-intent');
+
+    function toAbsoluteHttps(pathOrUrl) {
+      const isHttp = /^https?:\/\//i.test(pathOrUrl);
+      if (isHttp) return pathOrUrl.replace(/^http:\/\//i, 'https://');
+      return 'https://' + window.location.host + pathOrUrl;
+    }
+    function withBuster(url) {
+      if (!url.includes('/static/')) return url;
+      const v = Date.now();
+      return url + (url.includes('?') ? '&' : '?') + 'v=' + v;
+    }
+    function setStatus(msg) { console.log(msg); }
+
+    function updateTargets(raw) {
+      let url = withBuster(toAbsoluteHttps(raw));
+      qaViewer.src = url;
+
+
+      const encoded = encodeURIComponent(url);
+      androidIntent.href =
+        `intent://arvr.google.com/scene-viewer/1.0?file=${encoded}` +
+        `&mode=ar_preferred&enable_vertical_placement=true&use_depth_estimation=true` +
+        `#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;end;`;
+
+      setStatus('Loaded / ' + url);
+    }
+
+    updateTargets(qaSelect.value);
+    qaSelect.addEventListener('change', () => updateTargets(qaSelect.value));
+    qaViewer.addEventListener('error', (e) => {
+      const msg = (e.detail && e.detail.message) ? e.detail.message : 'Unknown error';
+      setStatus('Error ✗ ' + msg + ' — ' + qaViewer.src);
+    });
+    qaViewer.addEventListener('ar-status', (e) => {
+      setStatus(`AR status: ${e.detail.status} — ${qaViewer.src}`);
+    });
+  </script>
+
+  <!-- Painter (no external deps) -->
+</body>
+
+</html>

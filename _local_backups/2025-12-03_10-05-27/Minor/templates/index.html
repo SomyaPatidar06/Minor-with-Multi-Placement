@@ -1,0 +1,873 @@
+<!--
+Mahakaya-inspired single-file frontend
+Contains: responsive header + nav, hero with video background, auto image slider, About, Services, Projects gallery, Contact form, Footer
+Replace video and images in /assets/ folder or with your own URLs.
+-->
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sadan — Interior Design & Architecture (inspired)</title>
+  <meta name="description" content="Interior design & architecture — modern portfolio template inspired by mahakayainteriorandarchitect.com" />
+	<style> 
+    :root{
+      --accent:#b57b4a;
+      --dark:#0f1724;
+      --muted:#6b7280;
+      --card:#0b1220;
+      --glass: rgba(255,255,255,0.06);
+      --radius:12px;
+      --maxw:1200px;
+      --gap:20px;
+      --ff: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:var(--ff);background:linear-gradient(180deg,#020814 0%, #071025 100%);color:#e6eef8}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:var(--maxw);margin:0 auto;padding:36px 20px}
+
+    /* Header */
+    header{position:fixed;left:0;right:0;top:16px;z-index:80}
+    .nav-wrap{backdrop-filter: blur(6px);background:linear-gradient(180deg, rgba(5,8,15,0.5), rgba(5,8,15,0.35));border-radius:14px;padding:10px}
+    nav{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand .logo{width:46px;height:46px;background:linear-gradient(135deg,var(--accent),#8c5a32);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700}
+    .brand h1{font-size:18px;margin:0}
+    .menu{display:flex;gap:18px;align-items:center}
+    .menu a{padding:8px 12px;border-radius:8px;font-weight:600;color:var(--muted)}
+    .menu a:hover{color:#fff}
+    .cta{padding:8px 14px;background:var(--accent);color:#071022;border-radius:10px;font-weight:700}
+    .hamburger{display:none;background:transparent;border:0;color:#cfe0ff;font-size:22px}
+
+    /* Hero */
+    .hero{position:relative;height:78vh;min-height:520px;border-radius:18px;overflow:hidden;margin-top:10px}
+    .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,6,12,0.45),rgba(2,6,12,0.7));}
+    .hero-content{position:relative;z-index:3;display:flex;flex-direction:column;gap:18px;align-items:flex-start;padding:48px;max-width:720px}
+    .eyebrow{background:var(--glass);padding:8px 12px;border-radius:999px;color:black;font-weight:700}
+    .hero h2{font-size:40px;margin:0;line-height:1.03}
+    .hero p{color:#fff;max-width:560px}
+    .hero .actions{display:flex;gap:12px}
+
+    /* Slider */
+    .slider{margin-top:32px;border-radius:12px;overflow:hidden;background:#061022}
+    .slides{display:flex;transition:transform .4s ease;gap:0}
+    .slide{min-width:100%;height:600px;display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center}
+    .slider .controls{display:flex;justify-content:center;gap:10px;padding:12px}
+    .dot{width:10px;height:10px;border-radius:50%;background:#213241;cursor:pointer}
+    .dot.active{background:var(--accent)}
+
+    /* Sections */
+    section{padding:56px 0}
+    h3.section-title{font-size:22px;margin:0 0 18px;color: var(--accent, #f3c13a)}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap)}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:14px}
+    .muted{color:var(--muted)}
+    .card {
+  position: relative;
+  overflow: hidden;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top left, rgba(255,255,255,0.06), transparent);
+  opacity: 0;
+  transition: opacity .4s ease;
+}
+.card:hover::before {
+  opacity: 1;
+}
+#team {
+  text-align: center;
+  padding: 40px 0;
+  background: radial-gradient(circle at top left, rgba(255,255,255,0.06), transparent);
+  border-radius: 16 px;
+}
+
+.section-title {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 30px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Grid layout */
+.team-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+  padding: 0 40px;
+}
+
+.team-member {
+  position: relative;
+  width: 260px;
+  height: 320px;
+  overflow: hidden;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.4s ease;
+}
+
+.team-member:hover {
+  transform: translateY(-5px);
+}
+
+.team-member img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.team-member:hover img {
+  transform: scale(1.1);
+}
+
+/* Overlay styling */
+.team-member .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  padding: 15px;
+}
+
+.team-member:hover .overlay {
+  opacity: 1;
+}
+
+.team-member .overlay h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent, #f3c13a);
+  margin-bottom: 6px;
+}
+
+.team-member .overlay p {
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: #f1f1f1;
+}
+
+.team-member .overlay span {
+  font-size: 13px;
+  color: #d0d0d0;
+}
+
+/* Center second row when there are only 2 members */
+.second-row {
+  margin-top: 20px;
+}
+
+@media (min-width: 992px) {
+  .team-wrapper {
+    max-width: 950px;
+    margin: 0 auto;
+  }
+  .second-row {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+  .team-member {
+    width: 45%;
+    height: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .team-member {
+    width: 80%;
+    height: 260px;
+  }
+
+  .section-title {
+    font-size: 24px;
+  }
+}
+
+#studio-stats {
+  background:radial-gradient(circle at top left, rgba(255,255,255,0.06), transparent);
+  padding: 80px 0;
+  text-align: center;
+  color: #333;
+}
+
+#studio-stats .section-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.stats-intro {
+  font-size: 16px;
+  color: #fff;
+  max-width: 700px;
+  margin: 0 auto 50px;
+  line-height: 1.6;
+}
+
+.stats-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+}
+
+.stat-card {
+  width: 200px;
+  height: 160px;
+  background: #f8f8f8;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h3 {
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--accent, #e6b400);
+  margin-bottom: 8px;
+  transition: color 0.4s;
+}
+
+.stat-card p {
+  font-size: 15px;
+  color: #444;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .stat-card {
+    width: 45%;
+    height: 140px;
+  }
+
+  .stat-card h3 {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stat-card {
+    width: 80%;
+  }
+
+  .stats-intro {
+    font-size: 15px;
+  }
+}
+/*Service*/
+.services-section {
+  background: radial-gradient(circle at top left, rgba(255,255,255,0.06), transparent);
+  padding: 80px 0;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.services-intro {
+  font-size: 16px;
+  color: #fff;
+  max-width: 700px;
+  margin: 0 auto 50px;
+  line-height: 1.6;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  padding: 0 40px;
+  justify-content: center;
+}
+
+.service-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.4s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-6px);
+}
+
+.service-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.service-card:hover img {
+  transform: scale(1.1);
+}
+
+/* Overlay effect */
+.service-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  padding: 20px;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  transform: translateY(20px);
+  text-align: center;
+}
+
+.service-card:hover .service-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.service-overlay h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--accent, #f3c13a);
+  margin-bottom: 10px;
+}
+
+.service-overlay p {
+  font-size: 14px;
+  color: #eee;
+  line-height: 1.5;
+  max-width: 85%;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .service-card img {
+    height: 240px;
+  }
+}
+
+    /* Projects gallery */
+.slider-wrapper {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.slider-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.project-slide {
+  position: relative;
+  min-width: 350px;
+  height: 240px;
+  border-radius: 14px;
+  overflow: hidden;
+  scroll-snap-align: start;
+  cursor: pointer;
+  transition: transform 0.4s ease;
+}
+.project-slide:hover {
+  transform: scale(1.02);
+}
+
+.project-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.project-slide:hover img {
+  transform: scale(1.1);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  opacity: 0;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  transition: opacity 0.4s ease;
+}
+.project-slide:hover .overlay {
+  opacity: 1;
+}
+
+.overlay h4 {
+  font-size: 20px;
+  margin: 0 0 8px;
+  color: var(--accent);
+}
+
+.overlay p {
+  font-size: 14px;
+  color: #e0e0e0;
+  max-width: 80%;
+}
+
+
+
+    /* Contact */
+    .contact-grid{display:grid;grid-template-columns:1fr 360px;gap:20px}
+    form.card{display:flex;flex-direction:column;gap:12px}
+    input,textarea{background:transparent;border:1px solid rgba(255,255,255,0.08);padding:12px;border-radius:10px;color:inherit}
+    button[type=submit]{background:var(--accent);border:0;padding:12px;border-radius:10px;font-weight:700}
+
+    /* Footer */
+    footer{padding:36px 0;color:var(--muted)}
+
+    /* Responsive */
+    @media (max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.projects{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:720px){.menu{display:none}.hamburger{display:block}.hero{height:66vh}.hero h2{font-size:28px}.container{padding:20px}}
+    @media (max-width:520px){.contact-grid{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.projects{grid-template-columns:1fr}}
+     
+</style>
+	
+</head>
+<body>
+  {%  include 'header.html'%}
+  <main class="container" style="padding-top:120px">
+    <!-- Hero / Video background -->
+    <section id="home" class="hero" aria-label="hero">
+      <!-- Replace 'assets/hero.mp4' with your video path. Use a short looped clip for performance. -->
+      <video autoplay muted loop playsinline poster="assets/hero-poster.jpg">
+        <source src="{% static 'images/video2.mp4'%}" type="video/mp4">
+      </video>
+      <div class="hero-content">
+        <div class="eyebrow">SADAN — Residential & Commercial</div>
+        <h2>Designing timeless spaces that tell a story</h2>
+        <p class="muted">We craft interiors and architecture that balance beauty, function and sustainability. From concept to delivery — tailored solutions for every scale.</p>
+        <div class="actions">
+          <a class="cta" href="#projects-slider">Our Projects</a>
+          <a style="padding:8px 12px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);">View Services</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slider -->
+   <div class="slider" aria-label="featured projects">
+  <div class="slides" id="slides">
+    <div class="slide" style="background-image:url('{% static "images/sl1.jpeg" %}')"></div>
+    <div class="slide" style="background-image:url('{% static "images/sl4.jpg" %}')"></div>
+    <div class="slide" style="background-image:url('{% static "images/sl3.jpg" %}')"></div>
+    <div class="slide" style="background-image:url('{% static "images/sl5.webp" %}')"></div>
+  </div>
+  <div class="controls" id="dots"></div>
+</div>
+
+
+    <!-- About -->
+    <section id="about">
+      <h3 class="section-title">About Us</h3>
+      <div class="grid">
+        <div class="card">
+          <h4>Our Philosophy</h4>
+          <p class="muted">Thoughtful planning, material honesty, and craft — we create spaces that age gracefully and support the lives within them.</p>
+        </div>
+        <div class="card">
+          <h4>Approach</h4>
+          <p class="muted">From schematic design to on-site supervision, our multidisciplinary team delivers projects that meet timeline and budget without compromising design integrity.</p>
+        </div>
+        <div class="card">
+          <h4>Awards & Recognition</h4>
+          <p class="muted">Featured in design journals and recognized for sustainable solutions in interior architecture.</p>
+        </div>
+      </div>
+    </section>
+
+<section id="team" style="margin-top:60px;">
+  <h3 class="section-title">Our Creative Team</h3>
+
+  <div class="team-wrapper">
+    <!-- Row 1: 3 members -->
+    <div class="team-member">
+      <img src="{% static 'images/m1.jpg' %}" alt="Manshvee Chouhan" />
+      <div class="overlay">
+        <h4>Manshvee Chouhan</h4>
+        <p>0403AL231041</p>
+        <span>CSE, JIT Borawan</span>
+      </div>
+    </div>
+
+    <div class="team-member">
+      <img src="{% static 'images/m2.jpg' %}" alt="Monika Mourya" />
+      <div class="overlay">
+        <h4>Monika Mourya</h4>
+        <p>0403AL231043</p>
+        <span>CSE, JIT Borawan</span>
+      </div>
+    </div>
+
+    <div class="team-member">
+      <img src="{% static 'images/m3.jpg' %}" alt="Prachi Panwar" />
+      <div class="overlay">
+        <h4>Prachi Panwar</h4>
+        <p>0403AL231048</p>
+        <span>CSE, JIT Borawan</span>
+      </div>
+    </div>
+
+    <!-- Row 2: 2 members -->
+    <div class="team-member second-row">
+      <img src="{% static 'images/m4.jpg' %}" alt="Sadhana Birla" />
+      <div class="overlay">
+        <h4>Sadhana Birla</h4>
+        <p>0403AL231061</p>
+        <span>CSE, JIT Borawan</span>
+      </div>
+    </div>
+
+    <div class="team-member second-row">
+      <img src="{% static 'images/m5.jpg' %}" alt="Savita Yadav" />
+      <div class="overlay">
+        <h4>Savita Yadav</h4>
+        <p>0403AL231063</p>
+        <span>CSE, JIT Borawan</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="studio-stats">
+  <h3 class="section-title">Our Studio in Numbers</h3>
+
+  <p class="stats-intro">
+    Over the years, we’ve designed and delivered stunning interiors and architectural projects
+    that blend creativity, functionality, and passion. Here’s a glimpse of what defines us.
+  </p>
+
+  <div class="stats-wrapper">
+    <div class="stat-card">
+      <h3 class="counter" data-target="150">0</h3>
+      <p>Projects Completed</p>
+    </div>
+
+    <div class="stat-card">
+      <h3 class="counter" data-target="120">0</h3>
+      <p>Happy Clients</p>
+    </div>
+
+    <div class="stat-card">
+      <h3 class="counter" data-target="10">0</h3>
+      <p>Years of Experience</p>
+    </div>
+
+    <div class="stat-card">
+      <h3 class="counter" data-target="15">0</h3>
+      <p>Design Awards</p>
+    </div>
+  </div>
+</section>
+
+
+    <!-- Services -->
+    <section id="services">
+      <h3 class="section-title">Services</h3>
+      <div class="grid">
+        <div class="card">
+          <h4>Residential Design</h4>
+          <p class="muted">Custom interior fit-outs, furniture design, and turnkey solutions.</p>
+        </div>
+        <div class="card">
+          <h4>Commercial Fit-outs</h4>
+          <p class="muted">Retail, hospitality, offices with strong brand-aligned design.</p>
+        </div>
+        <div class="card">
+          <h4>Architecture</h4>
+          <p class="muted">Responsive architecture from concept to execution.</p>
+        </div>
+      </div>
+    </section>
+<section id="services" class="services-section">
+  <h3 class="section-title">Our Services</h3>
+  <p class="services-intro">
+    We design functional and timeless spaces, combining modern aesthetics with deep attention to detail.  
+    Explore our key areas of expertise below.
+  </p>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <img src="{% static 'images/s2.jpeg' %}" alt="Interior Design">
+      <div class="service-overlay">
+        <h4>Interior Design</h4>
+        <p>Transforming interiors into elegant, comfortable, and personalized spaces that reflect your lifestyle.</p>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <img src="{% static 'images/s1.png' %}" alt="Architectural Design">
+      <div class="service-overlay">
+        <h4>Architectural Design</h4>
+        <p>Creating architecture that harmonizes aesthetics, functionality, and innovation.</p>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <img src="{% static 'images/s3.jpg' %}" alt="Residential Projects">
+      <div class="service-overlay">
+        <h4>Residential Projects</h4>
+        <p>Crafting homes that express warmth, comfort, and timeless sophistication.</p>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <img src="{% static 'images/s4.jpg' %}" alt="Commercial Projects">
+      <div class="service-overlay">
+        <h4>Commercial Projects</h4>
+        <p>Designing inspiring and productive commercial environments tailored to your brand.</p>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <img src="{% static 'images/s5.jpg' %}" alt="Renovation & Remodeling">
+      <div class="service-overlay">
+        <h4>Renovation & Remodeling</h4>
+        <p>Revitalizing spaces through creative reimagining and detailed craftsmanship.</p>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <img src="{% static 'images/s6.jpg' %}" alt="Landscape Design">
+      <div class="service-overlay">
+        <h4>Landscape Design</h4>
+        <p>Blending natural beauty with structural design to create serene outdoor experiences.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <!-- Projects -->
+<!-- Project Slider -->
+<section id="projects-slider" style="margin-top:60px;">
+  <h3 class="section-title">Featured Projects</h3>
+  <div class="slider-wrapper">
+    <div class="project-slide">
+      <img src="{% static 'images/pj1.jpg' %}" alt="Luxury Living Room" />
+      <div class="overlay">
+        <h4>Modern Luxury Apartment</h4>
+        <p>Contemporary interiors blending comfort with elegance.</p>
+      </div>
+    </div>
+    <div class="project-slide">
+      <img src="{% static 'images/pj2.jpeg' %}" alt="Office Space" />
+      <div class="overlay">
+        <h4>Creative Office Space</h4>
+        <p>Functional and inspiring work environments designed for productivity.</p>
+      </div>
+    </div>
+    <div class="project-slide">
+      <img src="{% static 'images/pj3.jpg' %}" alt="Villa" />
+      <div class="overlay">
+        <h4>Private Villa</h4>
+        <p>Elegant architecture that blends indoor and outdoor experiences.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    <!-- Contact -->
+    <section id="contact">
+      <h3 class="section-title">Get in touch</h3>
+      <div class="contact-grid">
+        <div class="card">
+          <h4>Reach out for a consultation</h4>
+          <p class="muted">Tell us about your project and we'll get back within 48 hours.</p>
+          <div style="margin-top:12px">
+            <strong>Studio</strong>
+            <div class="muted">Mumbai, India</div>
+            <div style="margin-top:8px">Email: hello@mahakaya.studio</div>
+            <div>Phone: +91 9XXXXXXXXX</div>
+          </div>
+        </div>
+
+        <form class="card" onsubmit="handleSubmit(event)">
+          <input name="name" placeholder="Your name" required />
+          <input name="email" type="email" placeholder="Email" required />
+          <input name="subject" placeholder="Subject" />
+          <textarea name="message" rows="5" placeholder="Tell us about the project..." required></textarea>
+          <button type="submit">Send message</button>
+        </form>
+      </div>
+    </section>
+
+    <footer>
+      <div class="muted" style="display:flex;justify-content:space-between;align-items:center">
+        <div>© <span id="year"></span> SADAN</div>
+        <div class="muted">Follow us on: Instagram · Behance · LinkedIn</div>
+      </div>
+    </footer>
+  </main>
+<script>  
+   function toggleMobile(){
+      const menu = document.querySelector('.menu');
+      if(menu.style.display === 'flex') menu.style.display='none'; else menu.style.display='flex';
+      menu.style.flexDirection = 'column';
+      menu.style.background = 'rgba(2,6,12,0.6)';
+      menu.style.padding = '12px';
+      menu.style.position = 'absolute';
+      menu.style.right = '20px';
+      menu.style.top = '70px';
+      menu.style.borderRadius = '10px';
+    }
+
+    // Simple slider
+    (function(){
+      const slides = document.getElementById('slides');
+      const slidesCount = slides.children.length;
+      const dotsWrap = document.getElementById('dots');
+      let index = 0;
+      for(let i=0;i<slidesCount;i++){
+        const d = document.createElement('div'); d.className='dot' + (i===0? ' active':''); d.dataset.i = i;
+        d.addEventListener('click', ()=>{goTo(+d.dataset.i)});
+        dotsWrap.appendChild(d);
+      }
+      function goTo(i){ index = i; slides.style.transform = `translateX(${-100*i}%)`; updateDots(); }
+      function updateDots(){ Array.from(dotsWrap.children).forEach((d,ii)=> d.classList.toggle('active', ii===index)); }
+      function next(){ goTo((index+1)%slidesCount); }
+      let t = setInterval(next, 5000);
+      // pause on hover
+      const slider = document.querySelector('.slider');
+      slider.addEventListener('mouseenter', ()=> clearInterval(t));
+      slider.addEventListener('mouseleave', ()=> t = setInterval(next,5000));
+    })();
+
+    // Contact form submission (front-end stub)
+    function handleSubmit(e){
+      e.preventDefault();
+      const form = e.target;
+      const data = Object.fromEntries(new FormData(form).entries());
+      // replace with real endpoint (AJAX / integration) when ready
+      alert('Thank you, ' + (data.name || '') + '! Your message has been prepared to send.\n(Replace this stub with your backend endpoint.)');
+      form.reset();
+    }
+
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+   
+  // Simple horizontal auto-scroll
+  const slider = document.querySelector('.slider-wrapper');
+  let scrollStep = 1;
+  function autoScroll() {
+    if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth) {
+      scrollStep = -1;
+    } else if (slider.scrollLeft <= 0) {
+      scrollStep = 1;
+    }
+    slider.scrollLeft += scrollStep * 2;
+  }
+  let auto = setInterval(autoScroll, 30);
+  slider.addEventListener('mouseenter', () => clearInterval(auto));
+  slider.addEventListener('mouseleave', () => (auto = setInterval(autoScroll, 30)));
+
+
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const members = document.querySelectorAll(".team-member");
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = 1;
+          entry.target.style.transform = "translateY(0)";
+        }
+      });
+    }, { threshold: 0.3 });
+
+    members.forEach(member => {
+      member.style.opacity = 0;
+      member.style.transform = "translateY(20px)";
+      observer.observe(member);
+    });
+  });
+
+
+  // Counter animation when visible
+  document.addEventListener("DOMContentLoaded", () => {
+    const counters = document.querySelectorAll(".counter");
+    const options = { threshold: 0.5 };
+
+    const startCount = (counter) => {
+      const target = +counter.getAttribute("data-target");
+      let count = 0;
+      const increment = target / 100; // speed factor
+
+      const update = () => {
+        count += increment;
+        if (count < target) {
+          counter.textContent = Math.ceil(count);
+          requestAnimationFrame(update);
+        } else {
+          counter.textContent = target + "+";
+        }
+      };
+      update();
+    };
+
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          startCount(entry.target);
+          obs.unobserve(entry.target);
+        }
+      });
+    }, options);
+
+    counters.forEach(counter => observer.observe(counter));
+  });
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+{% load static %}
+<!doctype html>
+<!-- Website template by freewebsitetemplates.com -->
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>blog - Space Science Website Template</title>
+	<link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+	<script src="{%static 'js/mobile.js'%}" type="text/javascript"></script>
+</head>
+<body>
+{% include 'header.html'%}
+ <main class="container" style="padding-top:120px">
+
+    <!-- Services -->
+    <section id="services">
+      <h3 class="section-title">Services</h3>
+      <div class="grid">
+        <div class="card">
+          <h4>Residential Design</h4>
+          <p class="muted">Custom interior fit-outs, furniture design, and turnkey solutions.</p>
+        </div>
+        <div class="card">
+          <h4>Commercial Fit-outs</h4>
+          <p class="muted">Retail, hospitality, offices with strong brand-aligned design.</p>
+        </div>
+        <div class="card">
+          <h4>Architecture</h4>
+          <p class="muted">Responsive architecture from concept to execution.</p>
+        </div>
+      </div>
+    </section>
+<section id="services" class="services-section">
+  <h3 class="section-title">Our Services</h3>
+  <p class="services-intro">
+    We design functional and timeless spaces, combining modern aesthetics with deep attention to detail.  
+    Explore our key areas of expertise below.
+  </p>
+
+  <div class="services-grid">
+    <div class="service-card">
+		<a href="/interior_design/">
+      <img src="{% static 'images/s2.jpeg' %}" alt="Interior Design">
+      <div class="service-overlay">
+        <h4>Interior Design</h4>
+        <p>Transforming interiors into elegant, comfortable, and personalized spaces that reflect your lifestyle.</p>
+      </div>
+	  </a>
+    </div>
+
+    <div class="service-card">
+      <a href="/architectural_plan/">
+      <img src="{% static 'images/s1.png' %}" alt="Architectural Design">
+      <div class="service-overlay">
+        <h4>Architectural Plan</h4>
+        <p>Creating architecture that harmonizes aesthetics, functionality, and innovation.</p>
+      </div>
+      </a>
+    </div>
+
+    <div class="service-card">
+      <a href="/construction/">
+      <img src="{% static 'images/s3.jpg' %}" alt="Residential Projects">
+      <div class="service-overlay">
+        <h4>Construction</h4>
+        <p>Crafting homes that express warmth, comfort, and timeless sophistication.</p>
+      </div>
+      </a>
+    </div>
+
+    <div class="service-card">
+      <a href="/landscape_design/">
+      <img src="{% static 'images/s4.jpg' %}" alt="Commercial Projects">
+      <div class="service-overlay">
+        <h4>Landscape Design</h4>
+        <p>Blending natural beauty with structural design to create serene outdoor experiences.</p>
+      </div>
+      </a>
+    </div>
+
+    <div class="service-card">
+      <a href="/elevation_design/">
+      <img src="{% static 'images/s5.jpg' %}" alt="Renovation & Remodeling">
+      <div class="service-overlay">
+        <h4>Elevation design</h4>
+        <p>Revitalizing spaces through creative reimagining and detailed craftsmanship.</p>
+      </div>
+      </a>
+    </div>
+
+    <div class="service-card">
+      <a href="/walkthrough_Animation/">
+      <img src="{% static 'images/s6.jpg' %}" alt="Landscape Design">
+      <div class="service-overlay">
+        <h4>Walkthrough and Animations</h4>
+        <p>Blending natural beauty with structural design to create serene outdoor experiences.</p>
+      </div>
+      </a>
+    </div>
+    
+  </div>
+</section>
+
+	{% include 'footer.html'%}
+ </main>		
+	
+</body>
+</html>

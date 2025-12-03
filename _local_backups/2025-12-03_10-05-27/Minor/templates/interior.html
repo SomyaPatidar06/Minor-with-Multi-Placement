@@ -1,0 +1,64 @@
+{% load static %}
+<!doctype html>
+<!-- Website template by freewebsitetemplates.com -->
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Space Science Website Template</title>
+	<link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+	<script src="{% static 'js/mobile.js'%}" type="text/javascript"></script>
+
+</head>
+<body>
+	  {%  include 'header.html'%}
+  <main class="container" style="padding-top:120px">
+
+<!-- ===================== SERVICE DETAIL PAGE ===================== -->
+<section class="service-detail-section">
+  <div class="service-header">
+    <h1>Interior Design</h1>
+    <p>{{ service.description }}</p>
+  </div>
+
+  <!-- Image Gallery Grid -->
+  <div class="service-gallery">
+    <div class="gallery-item">
+      <img src="{% static 'images/i-1.jpg' %}" alt="{{ service.title }}">
+    </div>
+    <div class="gallery-item">
+      <img src="{% static 'images/i-2.jpeg' %}" alt="{{ service.title }}">
+    </div>
+    <div class="gallery-item">
+      <img src="{% static 'images/i-3.jpeg' %}" alt="{{ service.title }}">
+    </div>
+    <div class="gallery-item">
+      <img src="{% static 'images/i-4.jpg' %}" alt="{{ service.title }}">
+    </div>
+    <div class="gallery-item">
+      <img src="{% static 'images/i-5.jpg' %}" alt="{{ service.title }}">
+    </div>
+    <div class="gallery-item">
+      <img src="{% static 'images/i-6.jpg' %}" alt="{{ service.title }}">
+    </div>
+    <!-- <div class="gallery-item">
+      <img src="{% static 'images/i-7.jpg' %}" alt="{{ service.title }}">
+    </div> -->
+    <div class="gallery-item">
+      <img src="{% static 'images/i-8.jpeg' %}" alt="{{ service.title }}">
+    </div>
+    <div class="gallery-item">
+      <img src="{% static 'images/i-9.jpeg' %}" alt="{{ service.title }}">
+    </div>
+    <div class="gallery-item">
+      <img src="{% static 'images/i-10.jpg' %}" alt="{{ service.title }}">
+    </div>
+  </div>
+</section>
+
+
+    {% include 'footer.html'%}
+   </main>
+
+</body>
+</html>
