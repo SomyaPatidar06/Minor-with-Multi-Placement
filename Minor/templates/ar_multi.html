@@ -13,6 +13,13 @@
       font-family: sans-serif;
     }
 
+    /* Custom AR Button Style */
+    #ARButton {
+      background-color: #964b00 !important; 
+      color: white !important;
+      border-radius: 20px !important;
+      opacity: 1 !important; 
+    }
     /* UI Overlay - Moved to TOP to avoid AR Button overlap */
     #overlay {
       position: absolute;
@@ -110,11 +117,9 @@
       <div class="ui-element">
         <select id="model-select">
           <option value="{% static 'models/Sofaa.glb' %}">Sofa</option>
-          <option value="{% static 'models/Chair.glb' %}">Chair</option>
-          <option value="{% static 'models/Tablee.glb' %}">Table</option>
-          <option value="{% static 'models/Floor_Lamp.glb' %}">Floor Lamp</option>
-          <option value="{% static 'models/Chair_2.glb' %}">Chair2</option>
-          <option value="{% static 'models/table.glb' %}">Table2</option>
+          <option value="{% static 'models/Chair_2.glb' %}">Chair</option>
+          <option value="{% static 'models/table.glb' %}">Table</option>
+          <option value="{% static 'models/Lamp.glb' %}">Floor Lamp</option>
         </select>
       </div>
     </div>
